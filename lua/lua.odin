@@ -106,11 +106,11 @@ foreign LuauVM {
     ** access functions (stack -> C)
     */
 
-    isnumber    :: proc(L: ^State, idx: c.int) -> c.int ---
-    isstring    :: proc(L: ^State, idx: c.int) -> c.int   ---
-    iscfunction :: proc(L: ^State, idx: c.int) -> c.int   ---
-    isLfunction :: proc(L: ^State, idx: c.int) -> c.int   ---
-    isuserdata  :: proc(L: ^State, idx: c.int) -> c.int   ---
+    isnumber    :: proc(L: ^State, idx: c.int) -> b32 ---
+    isstring    :: proc(L: ^State, idx: c.int) -> b32   ---
+    iscfunction :: proc(L: ^State, idx: c.int) -> b32   ---
+    isLfunction :: proc(L: ^State, idx: c.int) -> b32   ---
+    isuserdata  :: proc(L: ^State, idx: c.int) -> b32   ---
     type        :: proc(L: ^State, idx: c.int) -> Type   ---
     typename    :: proc(L: ^State, tp:  c.int) -> cstring ---
 
