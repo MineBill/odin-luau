@@ -19,7 +19,7 @@ ispseudo :: #force_inline proc "c" (i: int) -> bool {
     return i <= REGISTRYINDEX
 }
 
-Status :: enum {
+Status :: enum c.int {
     OK = 0,
     YIELD,
     ERRRUN,
@@ -30,11 +30,11 @@ Status :: enum {
 }
 
 CoStatus :: enum {
-    LUA_CORUN = 0, // running
-    LUA_COSUS,     // suspended
-    LUA_CONOR,     // 'normal' (it resumed another coroutine)
-    LUA_COFIN,     // finished
-    LUA_COERR,     // finished with error
+    CORUN = 0, // running
+    COSUS,     // suspended
+    CONOR,     // 'normal' (it resumed another coroutine)
+    COFIN,     // finished
+    COERR,     // finished with error
 }
 
 State :: struct {}
@@ -199,9 +199,9 @@ foreign LuauVM {
     ** `load' and `call' functions (load and run Luau bytecode)
     */
     @(link_prefix = "luau_")
-    load :: proc(L: ^State, chunkname: cstring, data: cstring, size: c.size_t, env: c.int) -> c.int ---
+    load :: proc(L: ^State, chunkname: cstring, data: cstring, size: c.size_t, env: c.int) -> Status ---
     call  :: proc(L: ^State, nargs, nresults: c.int) ---
-    pcall :: proc(L: ^State, nargs, nresults, errfunc: c.int) -> c.int ---
+    pcall :: proc(L: ^State, nargs, nresults, errfunc: c.int) -> Status ---
 
     /*
     ** coroutine functions
