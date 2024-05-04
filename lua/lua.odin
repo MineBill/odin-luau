@@ -160,7 +160,7 @@ foreign LuauVM {
 
     pushlightuserdatatagged :: proc(L: ^State, p: rawptr, tag: c.int) ---
     newuserdatatagged       :: proc(L: ^State, sz: c.size_t, tag: c.int) -> rawptr ---
-    newuserdatadtor         :: proc(L: ^State, sz: c.size_t, dtor: #type proc(rawptr) -> rawptr) -> rawptr ---
+    newuserdatadtor         :: proc(L: ^State, sz: c.size_t, dtor: #type proc "c" (rawptr) -> rawptr) -> rawptr ---
     newbuffer               :: proc(L: ^State, sz: c.size_t) -> rawptr ---
 
     /*
