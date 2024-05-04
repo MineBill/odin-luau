@@ -4,10 +4,10 @@ import "../lua"
 
 when ODIN_OS == .Windows {
     foreign import LuauVM {
-        "../lib/Luau.VM.lib",
+        "../lib/windows/Luau.VM.lib",
     }
 } else {
-    #panic("Unsupported OS. Report this.")
+    #panic("Unsupported OS(currently). If you want, make a PR with the compiled binaries for your OS.")
 }
 
 State :: lua.State

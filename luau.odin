@@ -2,16 +2,14 @@ package luau
 import "core:c"
 
 when ODIN_OS == .Windows {
-    foreign import LuauVM {
-        "./lib/Luau.VM.lib",
-    }
-
     @(extra_linker_flags="/NODEFAULTLIB:libcmtd")
     foreign import LuauCompiler {
-        "./lib/Luau.Compiler.lib",
-        "./lib/Luau.AST.lib",
-        "./lib/Luau.CLI.lib.lib",
+        "./lib/windows/Luau.Compiler.lib",
+        "./lib/windows/Luau.AST.lib",
+        "./lib/windows/Luau.CLI.lib.lib",
     }
+} else {
+    #panic("Unsupported OS(currently). If you want, make a PR with the compiled binaries for your OS.")
 }
 
 CompileOptions :: struct {
