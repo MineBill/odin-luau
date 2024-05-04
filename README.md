@@ -2,9 +2,9 @@
 
 This repo contains bindings for the [Luau](https://luau-lang.org) programming language.
 
-### Important Notice
+> [!WARNING]
 > Currently, the binaries are bundled and only for Windows. I plan to include a small build script to pull the Luau repo and build it directly.
-In the meantime, if you want to build them yourself, you need to configure luau with `-DLUAU_EXTERN_C=1` and `-DLUAU_STATIC_CRT=1`.
+In the meantime, if you want to build them yourself, you need to clone Luau, and configure it with the following flags: `-DLUAU_EXTERN_C=1` and `-DLUAU_STATIC_CRT=1`.
 
 ## Usage
 Most of the Lua API stays to same excect some missing procs here and there.
