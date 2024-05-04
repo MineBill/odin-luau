@@ -1,7 +1,6 @@
 package luau_vm_l
 import "core:c"
 import "../lua"
-import "core:strings"
 
 when ODIN_OS == .Windows {
     foreign import LuauVM {
@@ -69,35 +68,31 @@ foreign LuauVM {
     typename  :: proc(L: ^State, idx: c.int) -> cstring ---
 }
 
-checkstring :: proc(L: ^State, numArg: c.int) -> string {
-    l: c.size_t
-    cs := checklstring(L, numArg, &l)
-    return strings.string_from_ptr(transmute([^]u8)cs, int(l))
+checkstring :: proc "c" (L: ^State, numArg: c.int) -> string {
+    return string(checklstring(L, numArg, nil))
 }
 
-optstring :: proc(L: ^State, numArg: c.int, def: cstring) -> string {
-    l: c.size_t
-    cs := optlstring(L, numArg, def, &l)
-    return strings.string_from_ptr(transmute([^]u8)cs, int(l))
+optstring :: proc "c" (L: ^State, numArg: c.int, def: cstring) -> string {
+    return string(optlstring(L, numArg, def, nil))
 }
 
-argcheck :: proc(L: ^State, cond: bool, arg: c.int, extramsg: cstring) {
+argcheck :: proc "c" (L: ^State, cond: bool, arg: c.int, extramsg: cstring) {
     if !cond {
         argerrorL(L, arg, extramsg)
     }
 }
 
-argexpected :: proc(L: ^State, cond: bool, arg: c.int, tname: cstring) {
+argexpected :: proc "c" (L: ^State, cond: bool, arg: c.int, tname: cstring) {
     if !cond {
         typeerrorL(L, arg, tname)
     }
 }
 
-getmetatable :: proc(L: ^State, n: cstring) -> c.int {
+getmetatable :: proc "c" (L: ^State, n: cstring) -> c.int {
     return lua.getfield(L, lua.REGISTRYINDEX, n)
 }
 
-opt :: proc(L: ^State, f: #type proc(^State, c.int) -> c.int, n: c.int, d: c.int) -> bool {
+opt :: proc "c" (L: ^State, f: #type proc "c" (^State, c.int) -> c.int, n: c.int, d: c.int) -> bool {
     return lua.isnoneornil(L, bool(n) ? d : f(L, n))
 }
 

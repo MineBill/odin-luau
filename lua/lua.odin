@@ -12,10 +12,10 @@ when ODIN_OS == .Windows {
 REGISTRYINDEX :: (-MAXCSTACK - 2000)
 ENVIRONINDEX  :: (-MAXCSTACK - 2001)
 GLOBALSINDEX  :: (-MAXCSTACK - 2002)
-upvalueindex :: #force_inline proc(i: int) -> int {
+upvalueindex :: #force_inline proc "c" (i: int) -> int {
     return GLOBALSINDEX - i
 }
-ispseudo :: #force_inline proc(i: int) -> bool {
+ispseudo :: #force_inline proc "c" (i: int) -> bool {
     return i <= REGISTRYINDEX
 }
 
@@ -42,7 +42,7 @@ State :: struct {}
 CFunction    :: #type proc "c" (L: ^State) -> c.int
 Continuation :: #type proc "c" (L: ^State, status: c.int) -> c.int
 
-Alloc :: #type proc(ud, ptr: rawptr, osize, nsize: c.size_t) -> rawptr
+Alloc :: #type proc "c" (ud, ptr: rawptr, osize, nsize: c.size_t) -> rawptr
 
 TNONE :: (-1)
 
@@ -263,7 +263,7 @@ GCOp :: enum {
     GCSETSTEPSIZE,
 }
 
-Destructor :: #type proc(L: ^State, userdata: rawptr)
+Destructor :: #type proc "c" (L: ^State, userdata: rawptr)
 
 
 @(link_prefix = "lua_")
@@ -315,7 +315,7 @@ NOREF :: (-1)
 REFNIL :: 0
 
     // rawgeti     :: proc(L: ^State, idx, n: c.int) -> c.int ---
-getref :: proc(L: ^State, ref: c.int) -> c.int {
+getref :: proc "c" (L: ^State, ref: c.int) -> c.int {
     return rawgeti(L, 0, ref)
 }
 
@@ -324,43 +324,43 @@ getref :: proc(L: ^State, ref: c.int) -> c.int {
 ** some useful macros
 ** ===============================================================
 */
-tonumber   :: #force_inline proc(L: ^State, #any_int i: c.int) -> c.double { return tonumberx(L, i, nil) }
-tointeger  :: #force_inline proc(L: ^State, #any_int i: c.int) -> c.int { return tointegerx(L, i, nil) }
-tounsigned :: #force_inline proc(L: ^State, #any_int i: c.int) -> c.uint { return tounsignedx(L, i, nil) }
+tonumber   :: #force_inline proc "c" (L: ^State, #any_int i: c.int) -> c.double { return tonumberx(L, i, nil) }
+tointeger  :: #force_inline proc "c" (L: ^State, #any_int i: c.int) -> c.int { return tointegerx(L, i, nil) }
+tounsigned :: #force_inline proc "c" (L: ^State, #any_int i: c.int) -> c.uint { return tounsignedx(L, i, nil) }
 
-pop :: #force_inline proc(L: ^State, #any_int n: c.int) { settop(L, -n - 1) }
+pop :: #force_inline proc "c" (L: ^State, #any_int n: c.int) { settop(L, -n - 1) }
 
-newtable    :: #force_inline proc(L: ^State) { createtable(L, 0, 0) }
-newuserdata :: #force_inline proc(L: ^State, #any_int s: c.size_t) -> rawptr { return newuserdatatagged(L, s, 0) }
+newtable    :: #force_inline proc "c" (L: ^State) { createtable(L, 0, 0) }
+newuserdata :: #force_inline proc "c" (L: ^State, #any_int s: c.size_t) -> rawptr { return newuserdatatagged(L, s, 0) }
 
-strlen :: #force_inline proc(L: ^State, #any_int i: c.int) -> c.int { return objlen(L, i) }
+strlen :: #force_inline proc "c" (L: ^State, #any_int i: c.int) -> c.int { return objlen(L, i) }
 
-isfunction      :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) == .FUNCTION }
-istable         :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) == .TABLE }
-islightuserdata :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) == .LIGHTUSERDATA }
-isnil           :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) == .NIL }
-isboolean       :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) == .BOOLEAN }
-isvector        :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) == .VECTOR }
-isthread        :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) == .THREAD }
-isbuffer        :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) == .BUFFER }
-isnone          :: #force_inline proc(L: ^State, n: c.int) -> bool { return cast(c.int) type(L, n) == TNONE }
-isnoneornil     :: #force_inline proc(L: ^State, n: c.int) -> bool { return type(L, n) <= .NIL }
-is              :: #force_inline proc(L: ^State, n: c.int, t: Type) -> bool { return type(L, n) == t }
+isfunction      :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) == .FUNCTION }
+istable         :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) == .TABLE }
+islightuserdata :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) == .LIGHTUSERDATA }
+isnil           :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) == .NIL }
+isboolean       :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) == .BOOLEAN }
+isvector        :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) == .VECTOR }
+isthread        :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) == .THREAD }
+isbuffer        :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) == .BUFFER }
+isnone          :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return cast(c.int) type(L, n) == TNONE }
+isnoneornil     :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) <= .NIL }
+is              :: #force_inline proc "c" (L: ^State, n: c.int, t: Type) -> bool { return type(L, n) == t }
 
-pushliteral   :: #force_inline proc(L: ^State, s: string) { pushlstring(L, cast(cstring) raw_data(s), cast(c.size_t) len(s)) }
-pushcfunction :: #force_inline proc(L: ^State, fn: CFunction, debug_name: cstring) { pushcclosurek(L, fn, debug_name, 0, nil) }
-pushcclosure  :: #force_inline proc(L: ^State, fn: CFunction, debug_name: cstring, nup: c.int) { pushcclosurek(L, fn, debug_name, nup, nil) }
-pushlightuserdata :: #force_inline proc(L: ^State, p: rawptr) { pushlightuserdatatagged(L, p, 0) }
+pushliteral   :: #force_inline proc "c" (L: ^State, s: string) { pushlstring(L, cast(cstring) raw_data(s), cast(c.size_t) len(s)) }
+pushcfunction :: #force_inline proc "c" (L: ^State, fn: CFunction, debug_name: cstring) { pushcclosurek(L, fn, debug_name, 0, nil) }
+pushcclosure  :: #force_inline proc "c" (L: ^State, fn: CFunction, debug_name: cstring, nup: c.int) { pushcclosurek(L, fn, debug_name, nup, nil) }
+pushlightuserdata :: #force_inline proc "c" (L: ^State, p: rawptr) { pushlightuserdatatagged(L, p, 0) }
 
-setglobal :: proc(L: ^State, s: cstring) {
+setglobal :: proc "c" (L: ^State, s: cstring) {
     setfield(L, GLOBALSINDEX, s)
 }
 
-getglobal :: proc(L: ^State, s: cstring) -> c.int {
+getglobal :: proc "c" (L: ^State, s: cstring) -> c.int {
     return getfield(L, GLOBALSINDEX, s)
 }
 
-tostring :: proc(L: ^State, i: c.int) -> string {
+tostring :: proc "c" (L: ^State, i: c.int) -> string {
     return string(tolstring(L, i, nil))
 }
 
@@ -375,8 +375,8 @@ Debug :: struct {
     ssbuf: [IDSIZE]c.char,
 }
 
-Hook     :: #type proc(L: ^State, ar: ^Debug)
-Coverage :: #type proc(ctx, function: rawptr, linedefined, depth: c.int, hits: [^]c.int, size: c.size_t)
+Hook     :: #type proc "c" (L: ^State, ar: ^Debug)
+Coverage :: #type proc "c" (ctx, function: rawptr, linedefined, depth: c.int, hits: [^]c.int, size: c.size_t)
 
 @(link_prefix = "lua_")
 foreign LuauVM {
