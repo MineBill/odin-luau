@@ -1,4 +1,4 @@
-package luau_vm_l
+package luau_vm_L
 import "core:c"
 import "../lua"
 
@@ -12,7 +12,6 @@ when ODIN_OS == .Windows {
 
 State :: lua.State
 CFunction :: lua.CFunction
-// VEC_LEN :: lua.VEC_LEN
 VEC_LEN :: 3
 
 Reg :: struct {
@@ -68,13 +67,9 @@ foreign LuauVM {
     typename  :: proc(L: ^State, idx: c.int) -> cstring ---
 }
 
-checkstring :: proc "c" (L: ^State, numArg: c.int) -> string {
-    return string(checklstring(L, numArg, nil))
-}
+checkstring :: proc "c" (L: ^State, numArg: c.int) -> string { return string(checklstring(L, numArg, nil)) }
 
-optstring :: proc "c" (L: ^State, numArg: c.int, def: cstring) -> string {
-    return string(optlstring(L, numArg, def, nil))
-}
+optstring :: proc "c" (L: ^State, numArg: c.int, def: cstring) -> string { return string(optlstring(L, numArg, def, nil)) }
 
 argcheck :: proc "c" (L: ^State, cond: bool, arg: c.int, extramsg: cstring) {
     if !cond {
@@ -88,13 +83,9 @@ argexpected :: proc "c" (L: ^State, cond: bool, arg: c.int, tname: cstring) {
     }
 }
 
-getmetatable :: proc "c" (L: ^State, n: cstring) -> c.int {
-    return lua.getfield(L, lua.REGISTRYINDEX, n)
-}
+getmetatable :: proc "c" (L: ^State, n: cstring) -> c.int { return lua.getfield(L, lua.REGISTRYINDEX, n) }
 
-opt :: proc "c" (L: ^State, f: #type proc "c" (^State, c.int) -> c.int, n: c.int, d: c.int) -> bool {
-    return lua.isnoneornil(L, bool(n) ? d : f(L, n))
-}
+opt :: proc "c" (L: ^State, f: #type proc "c" (^State, c.int) -> c.int, n: c.int, d: c.int) -> bool { return lua.isnoneornil(L, bool(n) ? d : f(L, n)) }
 
 // checkstring :: proc(L: ^State, n: c.int) {
 //     return string(checklstring(L, n, nil))
@@ -140,3 +131,28 @@ foreign LuauVM {
     sandbox       :: proc(L: ^State) ---
     sandboxthread :: proc(L: ^State) ---
 }
+
+/******************************************************************************
+ * Copyright (c) 2019-2023 Roblox Corporation
+ * Copyright (C) 1994-2008 Lua.org, PUC-Rio.  All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ ******************************************************************************/
+

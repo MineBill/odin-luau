@@ -12,12 +12,9 @@ when ODIN_OS == .Windows {
 REGISTRYINDEX :: (-MAXCSTACK - 2000)
 ENVIRONINDEX  :: (-MAXCSTACK - 2001)
 GLOBALSINDEX  :: (-MAXCSTACK - 2002)
-upvalueindex :: #force_inline proc "c" (i: int) -> int {
-    return GLOBALSINDEX - i
-}
-ispseudo :: #force_inline proc "c" (i: int) -> bool {
-    return i <= REGISTRYINDEX
-}
+
+upvalueindex :: #force_inline proc "c" (i: int) -> int { return GLOBALSINDEX - i }
+ispseudo     :: #force_inline proc "c" (i: int) -> bool { return i <= REGISTRYINDEX }
 
 Status :: enum c.int {
     OK = 0,
@@ -73,20 +70,20 @@ Type :: enum c.int {
     COUNT = PROTO
 }
 
-Number      :: c.double
-Integer     :: c.int
-Unsigned    :: c.uint
+Number   :: c.double
+Integer  :: c.int
+Unsigned :: c.uint
 
 @(link_prefix="lua_")
 foreign LuauVM {
     /*
     ** state manipulation
     */
-    newstate :: proc(f: Alloc, ud: rawptr) -> ^State ---
-    close :: proc(L: ^State) ---
-    newthread :: proc(L: ^State) -> ^State ---
-    mainthread :: proc(L: ^State) -> ^State ---
-    resetthread :: proc(L: ^State) ---
+    newstate      :: proc(f: Alloc, ud: rawptr) -> ^State ---
+    close         :: proc(L: ^State) ---
+    newthread     :: proc(L: ^State) -> ^State ---
+    mainthread    :: proc(L: ^State) -> ^State ---
+    resetthread   :: proc(L: ^State) ---
     isthreadreset :: proc(L: ^State) -> c.int ---
 
     /*
@@ -109,7 +106,7 @@ foreign LuauVM {
     ** access functions (stack -> C)
     */
 
-    isnumber :: proc(L: ^State, idx: c.int) -> c.int ---
+    isnumber    :: proc(L: ^State, idx: c.int) -> c.int ---
     isstring    :: proc(L: ^State, idx: c.int) -> c.int   ---
     iscfunction :: proc(L: ^State, idx: c.int) -> c.int   ---
     isLfunction :: proc(L: ^State, idx: c.int) -> c.int   ---
@@ -121,50 +118,49 @@ foreign LuauVM {
     rawequal :: proc(L: ^State, idx1, idx2: c.int) -> c.int ---
     lessthan :: proc(L: ^State, idx1, idx2: c.int) -> c.int ---
 
-    tonumberx               :: proc(L: ^State, idx : c.int, isnum: ^c.int)    -> c.double   ---
-    tointegerx              :: proc(L: ^State, idx : c.int, isnum: ^c.int)    -> c.int      ---
-    tounsignedx             :: proc(L: ^State, idx : c.int, isnum: ^c.int)    -> c.uint     ---
-    tovector                :: proc(L: ^State, idx : c.int)                   -> [^]c.float ---
-    toboolean               :: proc(L: ^State, idx : c.int)                   -> c.int      ---
-    tolstring               :: proc(L: ^State, idx : c.int, len  : ^c.size_t) -> cstring    ---
-    tostringatom            :: proc(L: ^State, idx : c.int, atom : ^c.int)    -> cstring    ---
-    namecallatom            :: proc(L: ^State, atom: [^]c.int)                -> cstring    ---
-    objlen                  :: proc(L: ^State, idx : c.int)                   -> c.int      ---
-    tocfunction             :: proc(L: ^State, idx : c.int)                   -> CFunction  ---
-    tolightuserdata         :: proc(L: ^State, idx : c.int)                   -> rawptr     ---
-    tolightuserdatatagged   :: proc(L: ^State, idx : c.int, tag  : c.int)     -> rawptr     ---
-    touserdata              :: proc(L: ^State, idx : c.int)                   -> rawptr     ---
-    touserdatatagged        :: proc(L: ^State, idx : c.int, tag  : c.int)     -> rawptr     ---
-    userdatatag             :: proc(L: ^State, idx : c.int)                   -> c.int      ---
-    lightuserdatatag        :: proc(L: ^State, idx : c.int)                   -> c.int      ---
-    tothread                :: proc(L: ^State, idx : c.int)                   -> ^State     ---
-    tobuffer                :: proc(L: ^State, idx : c.int, len  : ^c.size_t) -> rawptr     ---
-    topointer               :: proc(L: ^State, idx : c.int)                   -> rawptr     ---
+    tonumberx             :: proc(L: ^State, idx : c.int, isnum: ^c.int)    -> c.double   ---
+    tointegerx            :: proc(L: ^State, idx : c.int, isnum: ^c.int)    -> c.int      ---
+    tounsignedx           :: proc(L: ^State, idx : c.int, isnum: ^c.int)    -> c.uint     ---
+    tovector              :: proc(L: ^State, idx : c.int)                   -> [^]c.float ---
+    toboolean             :: proc(L: ^State, idx : c.int)                   -> c.int      ---
+    tolstring             :: proc(L: ^State, idx : c.int, len  : ^c.size_t) -> cstring    ---
+    tostringatom          :: proc(L: ^State, idx : c.int, atom : ^c.int)    -> cstring    ---
+    namecallatom          :: proc(L: ^State, atom: [^]c.int)                -> cstring    ---
+    objlen                :: proc(L: ^State, idx : c.int)                   -> c.int      ---
+    tocfunction           :: proc(L: ^State, idx : c.int)                   -> CFunction  ---
+    tolightuserdata       :: proc(L: ^State, idx : c.int)                   -> rawptr     ---
+    tolightuserdatatagged :: proc(L: ^State, idx : c.int, tag  : c.int)     -> rawptr     ---
+    touserdata            :: proc(L: ^State, idx : c.int)                   -> rawptr     ---
+    touserdatatagged      :: proc(L: ^State, idx : c.int, tag  : c.int)     -> rawptr     ---
+    userdatatag           :: proc(L: ^State, idx : c.int)                   -> c.int      ---
+    lightuserdatatag      :: proc(L: ^State, idx : c.int)                   -> c.int      ---
+    tothread              :: proc(L: ^State, idx : c.int)                   -> ^State     ---
+    tobuffer              :: proc(L: ^State, idx : c.int, len  : ^c.size_t) -> rawptr     ---
+    topointer             :: proc(L: ^State, idx : c.int)                   -> rawptr     ---
 
     /*
     ** push functions (C -> stack)
     */
 
-    pushnil                      :: proc(L: ^State) ---
-    pushnumber                   :: proc(L: ^State, n: c.double) ---
-    pushinteger                  :: proc(L: ^State, n: c.int) ---
-    pushunsigned                 :: proc(L: ^State, n: c.uint) ---
+    pushnil      :: proc(L: ^State) ---
+    pushnumber   :: proc(L: ^State, n: c.double) ---
+    pushinteger  :: proc(L: ^State, n: c.int) ---
+    pushunsigned :: proc(L: ^State, n: c.uint) ---
     // LUA_API void lua_pushvector   :: proc(L: ^State, float x, float y, float z, float w)
-    pushvector                   :: proc(L: ^State, x, y, z: c.float) ---
-    pushlstring                  :: proc(L: ^State, s: cstring, l: c.size_t) ---
-    pushstring                   :: proc(L: ^State, s: cstring) ---
+    pushvector   :: proc(L: ^State, x, y, z: c.float) ---
+    pushlstring  :: proc(L: ^State, s: cstring, l: c.size_t) ---
+    pushstring   :: proc(L: ^State, s: cstring) ---
 
     // lua_pushvfstring                 :: proc(L: ^State, fmt: cstring, argp: c.va_list) -> cstring ---
     // lua_pushfstringL                 :: proc(lua_State* L, const char* fmt, ...) -> cstring ---
 
-    pushcclosurek           :: proc(L: ^State, fn: CFunction, debugname: cstring, nup: c.int, cont: Continuation) ---
-    pushboolean             :: proc(L: ^State, b: c.int) ---
-    pushthread               :: proc(L: ^State) -> c.int ---
+    pushcclosurek :: proc(L: ^State, fn: CFunction, debugname: cstring, nup: c.int, cont: Continuation) ---
+    pushboolean   :: proc(L: ^State, b: c.int) ---
+    pushthread    :: proc(L: ^State) -> c.int ---
 
     pushlightuserdatatagged :: proc(L: ^State, p: rawptr, tag: c.int) ---
     newuserdatatagged       :: proc(L: ^State, sz: c.size_t, tag: c.int) -> rawptr ---
     newuserdatadtor         :: proc(L: ^State, sz: c.size_t, dtor: #type proc(rawptr) -> rawptr) -> rawptr ---
-
     newbuffer               :: proc(L: ^State, sz: c.size_t) -> rawptr ---
 
     /*
@@ -187,11 +183,11 @@ foreign LuauVM {
     /*
     ** set functions (stack -> Lua)
     */
-    settable    :: proc(L: ^State, idx: c.int) ---
-    setfield    :: proc(L: ^State, idx: c.int, k: cstring) ---
-    rawsetfield :: proc(L: ^State, idx: c.int, k: cstring) ---
-    rawset      :: proc(L: ^State, idx: c.int) ---
-    rawseti     :: proc(L: ^State, idx, n: c.int) ---
+    settable     :: proc(L: ^State, idx: c.int) ---
+    setfield     :: proc(L: ^State, idx: c.int, k: cstring) ---
+    rawsetfield  :: proc(L: ^State, idx: c.int, k: cstring) ---
+    rawset       :: proc(L: ^State, idx: c.int) ---
+    rawseti      :: proc(L: ^State, idx, n: c.int) ---
     setmetatable :: proc(L: ^State, objindex: c.int) -> c.int ---
     setfenv      :: proc(L: ^State, idx: c.int) -> c.int ---
 
@@ -199,19 +195,19 @@ foreign LuauVM {
     ** `load' and `call' functions (load and run Luau bytecode)
     */
     @(link_prefix = "luau_")
-    load :: proc(L: ^State, chunkname: cstring, data: cstring, size: c.size_t, env: c.int) -> Status ---
+    load  :: proc(L: ^State, chunkname: cstring, data: cstring, size: c.size_t, env: c.int) -> Status ---
     call  :: proc(L: ^State, nargs, nresults: c.int) ---
     pcall :: proc(L: ^State, nargs, nresults, errfunc: c.int) -> Status ---
 
     /*
     ** coroutine functions
     */
-    lua_yield       :: proc(L: ^State, nresults: c.int) -> c.int ---
-    lua_break       :: proc(L: ^State) -> c.int ---
-    lua_resume      :: proc(L: ^State, from: ^State, narg: c.int) -> c.int ---
-    lua_resumeerror :: proc(L: ^State, from: ^State) -> c.int ---
-    lua_status      :: proc(L: ^State) -> c.int ---
-    lua_isyieldable :: proc(L: ^State) -> c.int ---
+    lua_yield         :: proc(L: ^State, nresults: c.int) -> c.int ---
+    lua_break         :: proc(L: ^State) -> c.int ---
+    lua_resume        :: proc(L: ^State, from: ^State, narg: c.int) -> c.int ---
+    lua_resumeerror   :: proc(L: ^State, from: ^State) -> c.int ---
+    lua_status        :: proc(L: ^State) -> c.int ---
+    lua_isyieldable   :: proc(L: ^State) -> c.int ---
     lua_getthreaddata :: proc(L: ^State) -> rawptr ---
     lua_setthreaddata :: proc(L: ^State, data: rawptr) ---
     lua_costatus      :: proc(L: ^State, co: ^State) -> c.int ---
@@ -284,7 +280,7 @@ foreign LuauVM {
 
     error :: proc(L: ^State) -> ! ---
 
-    next :: proc(L: ^State, idx: c.int) -> c.int ---
+    next    :: proc(L: ^State, idx: c.int) -> c.int ---
     rawiter :: proc(L: ^State, idx, iter: c.int) -> c.int ---
 
     concat :: proc(L: ^State, n: c.int) ---
@@ -315,9 +311,7 @@ NOREF :: (-1)
 REFNIL :: 0
 
     // rawgeti     :: proc(L: ^State, idx, n: c.int) -> c.int ---
-getref :: proc "c" (L: ^State, ref: c.int) -> c.int {
-    return rawgeti(L, 0, ref)
-}
+getref :: proc "c" (L: ^State, ref: c.int) -> c.int { return rawgeti(L, 0, ref) }
 
 /*
 ** ===============================================================
@@ -347,22 +341,14 @@ isnone          :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return
 isnoneornil     :: #force_inline proc "c" (L: ^State, n: c.int) -> bool { return type(L, n) <= .NIL }
 is              :: #force_inline proc "c" (L: ^State, n: c.int, t: Type) -> bool { return type(L, n) == t }
 
-pushliteral   :: #force_inline proc "c" (L: ^State, s: string) { pushlstring(L, cast(cstring) raw_data(s), cast(c.size_t) len(s)) }
-pushcfunction :: #force_inline proc "c" (L: ^State, fn: CFunction, debug_name: cstring) { pushcclosurek(L, fn, debug_name, 0, nil) }
-pushcclosure  :: #force_inline proc "c" (L: ^State, fn: CFunction, debug_name: cstring, nup: c.int) { pushcclosurek(L, fn, debug_name, nup, nil) }
+pushliteral       :: #force_inline proc "c" (L: ^State, s: string) { pushlstring(L, cast(cstring) raw_data(s), cast(c.size_t) len(s)) }
+pushcfunction     :: #force_inline proc "c" (L: ^State, fn: CFunction, debug_name: cstring) { pushcclosurek(L, fn, debug_name, 0, nil) }
+pushcclosure      :: #force_inline proc "c" (L: ^State, fn: CFunction, debug_name: cstring, nup: c.int) { pushcclosurek(L, fn, debug_name, nup, nil) }
 pushlightuserdata :: #force_inline proc "c" (L: ^State, p: rawptr) { pushlightuserdatatagged(L, p, 0) }
 
-setglobal :: proc "c" (L: ^State, s: cstring) {
-    setfield(L, GLOBALSINDEX, s)
-}
-
-getglobal :: proc "c" (L: ^State, s: cstring) -> c.int {
-    return getfield(L, GLOBALSINDEX, s)
-}
-
-tostring :: proc "c" (L: ^State, i: c.int) -> string {
-    return string(tolstring(L, i, nil))
-}
+setglobal :: proc "c" (L: ^State, s: cstring) { setfield(L, GLOBALSINDEX, s) }
+getglobal :: proc "c" (L: ^State, s: cstring) -> c.int { return getfield(L, GLOBALSINDEX, s) }
+tostring  :: proc "c" (L: ^State, i: c.int) -> string { return string(tolstring(L, i, nil)) }
 
 // pushfstring :: proc() {}
 

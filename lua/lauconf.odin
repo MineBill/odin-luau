@@ -1,5 +1,11 @@
 package luau_vm
 
+// ==== ATTENTION! ====
+// This file reflects the configuration that was used to compile the libraries.
+// It is __NOT__ meant to configure Luau, it just tells you how it __WAS__ configured.
+// Different options and settings in the CMake file, can change the definitions
+// in luaconf.h, in which case this file must be updated to reflect them.
+// ==== ATTENTION! ====
 
 // Can be used to reconfigure internal error handling to use longjmp instead of C++ EH
 USE_LONGJMP :: 1
@@ -40,3 +46,5 @@ MINSTRTABSIZE :: 32
 // maximum number of captures supported by pattern matching
 MAXCAPTURES :: 32
 
+// This can be configured to be 4 but the library needs to be recompiled.
+VECTOR_SIZE :: 3
