@@ -42,3 +42,8 @@ main :: proc() {
     lua.call(L, 0, 0)
 }
 ```
+
+## Some notes
+Luau, for the most part, follows the original Lua api and as such you can use the 5.1 [reference manual](https://www.lua.org/manual/5.1/manual.html) to figure out what each proc does.
+
+However, some of it has changed (some procs have a return value when the don't in Lua) and there are a few extra procs. Since these are not documented anywhere, your best best is to just read the tests in the Luau repo.
