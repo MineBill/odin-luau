@@ -67,7 +67,7 @@ Type :: enum c.int {
     DEADKEY,
 
     // the count of TValue type tags
-    COUNT = PROTO
+    COUNT = PROTO,
 }
 
 Number   :: c.double
