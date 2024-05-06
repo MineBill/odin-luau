@@ -1,0 +1,1 @@
+declare TEST_ROOT: string

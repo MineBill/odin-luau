@@ -1,0 +1,1 @@
+return fs.read_entire_file(`{TEST_ROOT}/file.odin`)
