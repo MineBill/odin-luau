@@ -51,7 +51,7 @@ foreign LuauVM {
 
     checkbuffer :: proc(L: ^State, narg: c.int, len: ^c.size_t) -> rawptr ---
 
-    @(link_prefix = "where")
+    @(link_name = "where")
     _where :: proc(L: ^State, lvl: c.int) ---
 
     // errorL :: proc(L: ^State)
